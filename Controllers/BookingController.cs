@@ -6,6 +6,7 @@ using BookingSystemMVC.Booking.Data;
 using BookingSystemMVC.Booking.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingSystemMVC.Controllers
 {
@@ -62,7 +63,7 @@ namespace BookingSystemMVC.Controllers
             var sessionId = HttpContext.Session?.Id;
             if (string.IsNullOrEmpty(sessionId))
             {
-                // fallback: use a claim or create a temporary id per connection
+                // fallback: use a cookie
                 sessionId = Request.Cookies["booking-session"];
                 if (string.IsNullOrEmpty(sessionId))
                 {
@@ -80,14 +81,21 @@ namespace BookingSystemMVC.Controllers
         // API: POST /api/booking/confirm
         [HttpPost]
         [Route("api/booking/confirm")]
+        [Authorize]
         public async Task<IActionResult> Confirm([FromBody] ConfirmRequest req)
         {
             if (req == null) return BadRequest();
 
             var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var ok = await _reservationService.ConfirmReservationAsync(req.ReservationId, userId);
+            var ok = await _reservation_service_confirm_helper(req.ReservationId, userId);
             if (!ok) return BadRequest(new { message = "Could not confirm reservation." });
             return Ok();
+        }
+
+        // Helper to keep transaction/logic in service
+        private async Task<bool> _reservation_service_confirm_helper(Guid reservationId, string userId)
+        {
+            return await _reservationService.ConfirmReservationAsync(reservationId, userId);
         }
 
         // API: POST /api/booking/release

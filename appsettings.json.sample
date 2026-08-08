@@ -1,0 +1,13 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=identitydb;User=root;Password=secret;TreatTinyAsBoolean=true;",
+    "BookingConnection": "Server=localhost;Database=bookingdb;User=root;Password=secret;TreatTinyAsBoolean=true;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
