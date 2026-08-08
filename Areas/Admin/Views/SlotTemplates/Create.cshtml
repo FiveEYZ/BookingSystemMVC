@@ -1,0 +1,21 @@
+@model BookingSystemMVC.Booking.Models.SlotTemplate
+@{
+    ViewData["Title"] = "Ny slot";
+}
+
+<h1>Ny slot</h1>
+<form method="post">
+    <input type="hidden" name="ServiceId" value="@ViewBag.ServiceId" />
+    <div class="mb-3">
+        <label class="form-label">Starttid (HH:mm)</label>
+        <input class="form-control" name="StartTime" placeholder="09:00" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Varaktighet (min)</label>
+        <input class="form-control" name="DurationMinutes" value="60" />
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" name="IsActive" checked /> <label class="form-check-label">Aktiv</label>
+    </div>
+    <button class="btn btn-primary" type="submit">Spara</button>
+</form>

@@ -1,0 +1,27 @@
+@model IEnumerable<BookingSystemMVC.Booking.Models.SlotTemplate>
+@{
+    var service = ViewBag.Service as BookingSystemMVC.Booking.Models.Service;
+    ViewData["Title"] = "Slots för " + service?.Name;
+}
+
+<h1>Slots för @service?.Name</h1>
+<p><a class="btn btn-primary" href="@Url.Action("Create","SlotTemplates", new { area = "Admin", serviceId = service?.Id })">Ny slot</a></p>
+<table class="table">
+    <thead>
+        <tr><th>Start</th><th>Varaktighet (min)</th><th>Aktiv</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach(var s in Model)
+    {
+        <tr>
+            <td>@s.StartTime.ToString()</td>
+            <td>@s.DurationMinutes</td>
+            <td>@(s.IsActive ? "Ja" : "Nej")</td>
+            <td>
+                <a class="btn btn-sm btn-secondary" href="@Url.Action("Edit","SlotTemplates", new { area = "Admin", id = s.Id })">Edit</a>
+                <a class="btn btn-sm btn-danger" href="@Url.Action("Delete","SlotTemplates", new { area = "Admin", id = s.Id })">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

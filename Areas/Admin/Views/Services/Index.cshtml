@@ -1,0 +1,26 @@
+@model IEnumerable<BookingSystemMVC.Booking.Models.Service>
+@{
+    ViewData["Title"] = "Hantera tjänster";
+}
+
+<h1>Hantera tjänster</h1>
+<p><a class="btn btn-primary" href="@Url.Action("Create", "Services", new { area = "Admin" })">Ny tjänst</a></p>
+<table class="table">
+    <thead>
+        <tr><th>Namn</th><th>Pris</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach(var s in Model)
+    {
+        <tr>
+            <td>@s.Name</td>
+            <td>@s.Price.ToString("C")</td>
+            <td>
+                <a class="btn btn-sm btn-secondary" href="@Url.Action("Edit","Services", new { area = "Admin", id = s.Id })">Edit</a>
+                <a class="btn btn-sm btn-danger" href="@Url.Action("Delete","Services", new { area = "Admin", id = s.Id })">Delete</a>
+                <a class="btn btn-sm btn-info" href="/Admin/SlotTemplates?serviceId=@s.Id">Slots</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

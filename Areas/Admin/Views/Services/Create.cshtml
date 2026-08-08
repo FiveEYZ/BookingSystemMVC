@@ -1,0 +1,21 @@
+@model BookingSystemMVC.Booking.Models.Service
+@{
+    ViewData["Title"] = "Ny tjänst";
+}
+
+<h1>Ny tjänst</h1>
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Namn</label>
+        <input class="form-control" name="Name" value="@Model?.Name" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Beskrivning</label>
+        <textarea class="form-control" name="Description">@Model?.Description</textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Pris</label>
+        <input class="form-control" name="Price" value="@Model?.Price" />
+    </div>
+    <button class="btn btn-primary" type="submit">Spara</button>
+</form>
