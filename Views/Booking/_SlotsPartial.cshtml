@@ -1,0 +1,23 @@
+@model IEnumerable<BookingSystemMVC.Booking.Services.SlotDto>
+<div class="slots-list">
+@foreach(var s in Model)
+{
+    var dt = s.StartDateTime.ToLocalTime();
+    <div class="slot-item">
+        <span class="slot-time">@dt.ToString("HH:mm")</span>
+        <span class="slot-duration">@s.DurationMinutes min</span>
+        @if (s.IsAvailable)
+        {
+            <button class="btn btn-sm btn-success reserve-btn" data-start="@s.StartDateTime.ToString("o")">Reservera</button>
+        }
+        else if (s.ReservationId.HasValue)
+        {
+            <span class="badge bg-warning text-dark">Temporärt taget</span>
+        }
+        else
+        {
+            <span class="badge bg-danger">Bokad</span>
+        }
+    </div>
+}
+</div>

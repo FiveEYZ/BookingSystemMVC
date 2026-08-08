@@ -1,0 +1,17 @@
+@model IEnumerable<BookingSystemMVC.Booking.Models.Service>
+@{
+    ViewData["Title"] = "Tjänster";
+}
+
+<h1>Tjänster</h1>
+<div class="services">
+    @foreach (var s in Model)
+    {
+        <div class="service-card">
+            <h2>@s.Name</h2>
+            <p>@s.Description</p>
+            <p>Pris: @s.Price.ToString("C")</p>
+            <a class="btn btn-primary" href="@Url.Action("Service", "Booking", new { id = s.Id })">Välj</a>
+        </div>
+    }
+</div>
