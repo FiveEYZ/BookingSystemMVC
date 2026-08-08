@@ -1,0 +1,88 @@
+@model IEnumerable<BookingSystemMVC.Booking.Services.SlotDto>
+@{
+    var svc = (BookingSystemMVC.Booking.Models.Service)ViewBag.Service;
+    var date = (DateTime)ViewBag.Date;
+    ViewData["Title"] = $"@svc.Name - {date:yyyy-MM-dd}";
+}
+
+<h1>@svc.Name</h1>
+<p>@svc.Description</p>
+<p>Pris: @svc.Price.ToString("C")</p>
+
+<div class="mb-3">
+    <label for="dateInput">Välj datum</label>
+    <input id="dateInput" type="date" class="form-control" value="@date.ToString("yyyy-MM-dd")" />
+</div>
+
+<div id="slotsContainer">
+    @await Html.PartialAsync("_SlotsPartial", Model)
+</div>
+
+<div class="mt-3">
+    <button id="backToServices" class="btn btn-secondary" onclick="location.href='@Url.Action("Index","Booking")'">Tillbaka till tjänster</button>
+</div>
+
+@section Scripts {
+    <script src="/js/booking.js"></script>
+    <script>
+        (function(){
+            const serviceId = @svc.Id;
+            const dateInput = document.getElementById('dateInput');
+
+            async function loadSlots() {
+                const date = dateInput.value;
+                const resp = await fetch(`/api/booking/${serviceId}/slots?date=${date}`);
+                if (!resp.ok) return;
+                const slots = await resp.json();
+                const container = document.getElementById('slotsContainer');
+                // Render partial by calling server-side partial could be done, but here we replace with simple client render
+                container.innerHTML = '';
+                slots.forEach(s => {
+                    const div = document.createElement('div');
+                    div.className = 'slot-item';
+                    const dt = new Date(s.startDateTime);
+                    const time = dt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    div.innerHTML = `<strong>${time}</strong> - <span>${s.durationMinutes} min</span> `;
+                    if (s.isAvailable) {
+                        div.innerHTML += `<button class='btn btn-sm btn-success reserve-btn' data-start='${s.startDateTime}'>Reservera</button>`;
+                    } else if (s.reservationId) {
+                        div.innerHTML += `<span class='badge bg-warning text-dark'>Temporärt taget</span>`;
+                    } else {
+                        div.innerHTML += `<span class='badge bg-danger'>Bokad</span>`;
+                    }
+                    container.appendChild(div);
+                });
+            }
+
+            dateInput.addEventListener('change', loadSlots);
+            loadSlots();
+
+            // Delegate reserve click
+            document.addEventListener('click', async (ev) => {
+                if (ev.target.matches('.reserve-btn')) {
+                    const start = ev.target.getAttribute('data-start');
+                    const payload = { serviceId: serviceId, startDateTime: start };
+                    const resp = await fetch('/api/booking/reserve', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (resp.status === 200) {
+                        const data = await resp.json();
+                        alert('Reservation skapad. Du har tills ' + new Date(data.expiresAt).toLocaleTimeString() + ' på dig att bekräfta.');
+                        loadSlots();
+                    } else if (resp.status === 409) {
+                        const err = await resp.json();
+                        alert('Kunde inte reservera: ' + err.message);
+                        loadSlots();
+                    } else {
+                        alert('Fel vid reservation');
+                    }
+                }
+            });
+
+            // Initialize SignalR (handled in booking.js)
+            window.bookingInit && window.bookingInit(serviceId, dateInput.value, loadSlots);
+            dateInput.addEventListener('change', () => window.bookingSubscribe && window.bookingSubscribe(serviceId, dateInput.value));
+        })();
+    </script>
+}
