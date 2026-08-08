@@ -1,0 +1,1 @@
+Added Program.cs wiring Identity, BookingDbContext, SignalR and Session; updated BookingController Confirm action to require authentication; added appsettings.json.sample and a helper script for creating migrations. Branch: feature/identity-setup
