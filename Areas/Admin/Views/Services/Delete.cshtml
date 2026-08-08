@@ -1,0 +1,12 @@
+@model BookingSystemMVC.Booking.Models.Service
+@{
+    ViewData["Title"] = "Radera tjänst";
+}
+
+<h1>Radera tjänst</h1>
+<form method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <p>Är du säker på att du vill ta bort tjänsten "@Model.Name"?</p>
+    <button class="btn btn-danger" type="submit">Ja, ta bort</button>
+    <a class="btn btn-secondary" href="@Url.Action("Index","Services", new { area = "Admin" })">Avbryt</a>
+</form>

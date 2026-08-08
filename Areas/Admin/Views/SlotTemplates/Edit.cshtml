@@ -1,0 +1,21 @@
+@model BookingSystemMVC.Booking.Models.SlotTemplate
+@{
+    ViewData["Title"] = "Redigera slot";
+}
+
+<h1>Redigera slot</h1>
+<form method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div class="mb-3">
+        <label class="form-label">Starttid (TimeSpan)</label>
+        <input class="form-control" name="StartTime" value="@Model.StartTime" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Varaktighet (min)</label>
+        <input class="form-control" name="DurationMinutes" value="@Model.DurationMinutes" />
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" name="IsActive" @(Model.IsActive ? "checked" : "") /> <label class="form-check-label">Aktiv</label>
+    </div>
+    <button class="btn btn-primary" type="submit">Spara</button>
+</form>

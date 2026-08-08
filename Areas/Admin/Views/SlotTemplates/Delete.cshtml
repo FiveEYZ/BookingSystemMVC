@@ -1,0 +1,12 @@
+@model BookingSystemMVC.Booking.Models.SlotTemplate
+@{
+    ViewData["Title"] = "Radera slot";
+}
+
+<h1>Radera slot</h1>
+<form method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <p>Är du säker på att du vill ta bort slotten ?</p>
+    <button class="btn btn-danger" type="submit">Ja, ta bort</button>
+    <a class="btn btn-secondary" href="@Url.Action("Index","SlotTemplates", new { area = "Admin", serviceId = Model.ServiceId })">Avbryt</a>
+</form>
